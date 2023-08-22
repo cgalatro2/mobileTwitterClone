@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["src/*"],
+      "tests": ["tests/*"],
+      "@components/*": ["src/components/*"],
+      "@screens/*": ["src/screens/*"]
+    }
+  },
+  "extends": "expo/tsconfig.base"
+}
