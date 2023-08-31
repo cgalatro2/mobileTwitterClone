@@ -1,12 +1,13 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { View, Button } from "react-native";
 import { Input } from "@rneui/themed";
+import { useAuth } from "context/AuthContext";
 
 export default function SignupScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // const { signIn } = useContext(AuthContext);
+  const { isLoggedIn } = useAuth();
 
   return (
     <View>
@@ -25,7 +26,6 @@ export default function SignupScreen({ navigation }) {
         title="Already have an account? Sign in"
         onPress={() => navigation.navigate("Login")}
       />
-      {/* <Button title="Sign in" onPress={() => signIn({ username, password })} /> */}
     </View>
   );
 }
