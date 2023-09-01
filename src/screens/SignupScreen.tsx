@@ -1,26 +1,29 @@
 import { useState } from "react";
 import { View, Button } from "react-native";
-import { Input } from "@rneui/themed";
-import { useAuth } from "context/AuthContext";
+import { Input, Text } from "@rneui/themed";
+
+import { useAuth, useAuthDispatch, signup } from "context/AuthContext";
 
 export default function SignupScreen({ navigation }) {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { isLoggedIn } = useAuth();
+  const state = useAuth();
+  const dispatch = useAuthDispatch();
 
   return (
     <View>
-      <Input
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
+      <Input placeholder="Username" value={email} onChangeText={setEmail} />
       <Input
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+      />
+      {state.errorMessage ? <Text>{state.errorMessage}</Text> : null}
+      <Button
+        title="Sign tf up"
+        onPress={() => signup(dispatch, { email, password })}
       />
       <Button
         title="Already have an account? Sign in"

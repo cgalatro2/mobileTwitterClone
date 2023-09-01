@@ -13,11 +13,11 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default () => {
-  const { isLoggedIn } = useAuth();
+  const { token } = useAuth();
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? (
+      {token !== "" ? (
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {

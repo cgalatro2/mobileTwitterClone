@@ -1,14 +1,52 @@
 import { createContext, useContext, useReducer } from "react";
+import * as SecureStore from "expo-secure-store";
 
+import serverAPI from "api/serverAPI";
+
+// TODO: type these https://kentcdodds.com/blog/how-to-use-react-context-effectively
 const AuthContext = createContext(null);
 const AuthDispatchContext = createContext(null);
 
 type AuthState = {
-  isLoggedIn: boolean;
+  token: string;
+  errorMessage: string;
 };
 
+export async function login(dispatch, { email, password }) {
+  try {
+    const response = await serverAPI.post("/login", { email, password });
+    await SecureStore.setItemAsync("token", response.data.token);
+  } catch (err) {
+    dispatch({
+      type: "ERROR",
+      payload: `Something went wrong with login: ${err.message}`,
+    });
+  }
+}
+
+export async function signup(dispatch, { email, password }) {
+  try {
+    const response = await serverAPI.post("/signup", { email, password });
+    await SecureStore.setItemAsync("token", response.data.token);
+    dispatch({ type: "SIGNUP", payload: response.data.token });
+  } catch (err) {
+    dispatch({
+      type: "ERROR",
+      payload: `Something went wrong with signup: ${err.message}`,
+    });
+  }
+}
+
+export async function logout(dispatch) {
+  await SecureStore.deleteItemAsync("token");
+  dispatch({ type: "LOGOUT" });
+}
+
 export function AuthProvider({ children }) {
-  const [state, dispatch] = useReducer(authReducer, { isLoggedIn: false });
+  const [state, dispatch] = useReducer(authReducer, {
+    token: "",
+    errorMessage: "",
+  });
 
   return (
     <AuthContext.Provider value={state}>
@@ -30,10 +68,16 @@ export function useAuthDispatch() {
 function authReducer(state: AuthState, action: any) {
   switch (action.type) {
     case "LOGIN": {
-      return { ...state, isLoggedIn: true };
+      return { errorMessage: "", token: action.payload };
+    }
+    case "SIGNUP": {
+      return { errorMessage: "", token: action.payload };
     }
     case "LOGOUT": {
-      return { ...state, isLoggedIn: false };
+      return { ...state, token: "" };
+    }
+    case "ERROR": {
+      return { ...state, errorMessage: action.payload };
     }
     default: {
       return { ...state };
