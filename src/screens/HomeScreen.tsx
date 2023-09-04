@@ -1,3 +1,5 @@
+import serverAPI from "api/serverAPI";
+import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { useQuery } from "react-query";
 
@@ -17,6 +19,16 @@ type Beer = {
 
 export default function HomeScreen() {
   const { isLoading, error, data } = useQuery<Beer[]>("beers");
+  const [tweets, setTweets] = useState([]);
+
+  const getTweets = async () => {
+    const response = await serverAPI.get("/tweets");
+    setTweets(response.data);
+  };
+
+  useEffect(() => {
+    getTweets();
+  }, []);
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -28,8 +40,8 @@ export default function HomeScreen() {
 
   return (
     <>
-      {data?.map((beer) => {
-        return <Text key={beer.id}>{beer.name}</Text>;
+      {tweets?.map((tweet) => {
+        return <Text key={tweet._id}>{tweet.content}</Text>;
       })}
     </>
   );

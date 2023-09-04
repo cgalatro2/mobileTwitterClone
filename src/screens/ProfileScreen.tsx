@@ -1,6 +1,6 @@
 import { Button, Text } from "react-native";
 
-import { useAuthDispatch } from "context/AuthContext";
+import { useAuthDispatch, logout } from "context/AuthContext";
 
 export default function ProfileScreen() {
   const dispatch = useAuthDispatch();
@@ -8,7 +8,7 @@ export default function ProfileScreen() {
   return (
     <>
       <Text>Profile screen babay</Text>
-      <Button title="Logout" onPress={() => dispatch({ type: "LOGOUT" })} />
+      <Button title="Logout" onPress={() => logout(dispatch)} />
     </>
   );
 }
