@@ -15,7 +15,8 @@ type AuthState = {
 export async function login(dispatch, { email, password }) {
   try {
     const response = await serverAPI.post("/login", { email, password });
-    await SecureStore.setItemAsync("token", response.data.token);
+    await SecureStore.setItemAsync("token", response?.data?.token ?? "");
+    dispatch({ type: "LOGIN", payload: response.data.token });
   } catch (err) {
     dispatch({
       type: "ERROR",
@@ -27,7 +28,7 @@ export async function login(dispatch, { email, password }) {
 export async function signup(dispatch, { email, password }) {
   try {
     const response = await serverAPI.post("/signup", { email, password });
-    await SecureStore.setItemAsync("token", response.data.token);
+    await SecureStore.setItemAsync("token", response?.data?.token ?? "");
     dispatch({ type: "SIGNUP", payload: response.data.token });
   } catch (err) {
     dispatch({
@@ -44,7 +45,7 @@ export async function logout(dispatch) {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(authReducer, {
-    token: "",
+    token: SecureStore.getItemAsync("token" ?? ""),
     errorMessage: "",
   });
 

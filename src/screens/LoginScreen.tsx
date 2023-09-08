@@ -12,11 +12,17 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View>
-      <Input placeholder="Email" value={email} onChangeText={setEmail} />
+      <Input
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+      />
       <Input
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
+        autoCapitalize="none"
         secureTextEntry
       />
       <Button
@@ -25,7 +31,7 @@ export default function LoginScreen({ navigation }) {
       />
       <Button
         title="Don't have an account? Sign up"
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigate("Signup")}
       />
     </View>
   );

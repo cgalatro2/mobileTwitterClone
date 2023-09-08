@@ -3,21 +3,22 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home, User } from "react-native-feather";
 
-import HomeScreen from "@screens/HomeScreen";
 import ProfileScreen from "@screens/ProfileScreen";
 import SignupScreen from "@screens/SignupScreen";
 import LoginScreen from "@screens/LoginScreen";
+import HomeScreen from "@screens/HomeScreen";
+
 import { useAuth } from "context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default () => {
-  const { token } = useAuth();
+  const state = useAuth();
 
   return (
     <NavigationContainer>
-      {token !== "" ? (
+      {state.token !== "" ? (
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
@@ -44,8 +45,8 @@ export default () => {
         </Tab.Navigator>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
         </Stack.Navigator>
       )}
     </NavigationContainer>

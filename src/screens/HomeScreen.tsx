@@ -1,25 +1,17 @@
-import serverAPI from "api/serverAPI";
+import { Button, FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-import { Text } from "react-native";
-import { useQuery } from "react-query";
+import { BottomSheet, ListItem, Avatar } from "@rneui/themed";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type Beer = {
-  id: number;
-  uid: string;
-  brand: string;
-  name: string;
-  style: string;
-  hop: string;
-  yeast: string;
-  malts: string;
-  ibu: string;
-  alcohol: string;
-  blg: string;
-};
+import serverAPI from "api/serverAPI";
 
-export default function HomeScreen() {
-  const { isLoading, error, data } = useQuery<Beer[]>("beers");
+import Write from "screens/WriteTweet";
+
+export default function HomeScreen({ navigation }) {
   const [tweets, setTweets] = useState([]);
+  const [isWriting, setIsWriting] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   const getTweets = async () => {
     const response = await serverAPI.get("/tweets");
@@ -30,19 +22,59 @@ export default function HomeScreen() {
     getTweets();
   }, []);
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button title={"Write"} onPress={() => setIsWriting(true)} />
+      ),
+    });
+  }, [navigation]);
 
-  if (error) {
-    return <Text>{`${error}`}</Text>;
-  }
+  const renderItem = ({ item }) => (
+    <ListItem bottomDivider>
+      {/* <Avatar source={{ uri: item.avatar_url }} /> */}
+      <ListItem.Content>
+        <ListItem.Title>{item.content}</ListItem.Title>
+        {/* <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle> */}
+      </ListItem.Content>
+      <ListItem.Chevron />
+    </ListItem>
+  );
+
+  const closeModal = () => setIsWriting(false);
 
   return (
-    <>
-      {tweets?.map((tweet) => {
-        return <Text key={tweet._id}>{tweet.content}</Text>;
-      })}
-    </>
+    <SafeAreaView>
+      <FlatList
+        keyExtractor={(item) => item._id}
+        data={tweets}
+        renderItem={renderItem}
+      />
+      <BottomSheet
+        modalProps={{
+          transparent: false,
+          // presentationStyle: "formSheet",
+          onRequestClose: closeModal, // see if rm'ing affects Android back button
+        }}
+        isVisible={isWriting}
+        onBackdropPress={closeModal}
+        containerStyle={{
+          paddingBottom: insets.bottom,
+          paddingTop: insets.top,
+          ...styles.bottomSheetContainer,
+        }}
+      >
+        <Write refetchTweets={getTweets} close={closeModal} />
+      </BottomSheet>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  bottomSheetContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    backgroundColor: "white",
+  },
+});

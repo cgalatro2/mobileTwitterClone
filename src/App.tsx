@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import { registerRootComponent } from "expo";
 import axios from "axios";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import AppNavigation from "AppNavigation";
+import AppNavigation from "navigation/AppNavigation";
 import { AuthProvider } from "context/AuthContext";
 
 const defaultQueryFn = async ({ queryKey }) => {
@@ -23,7 +24,9 @@ export default function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
-        <AppNavigation />
+        <SafeAreaProvider>
+          <AppNavigation />
+        </SafeAreaProvider>
       </QueryClientProvider>
     </AuthProvider>
   );
