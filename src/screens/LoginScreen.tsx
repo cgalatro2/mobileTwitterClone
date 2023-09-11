@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Button } from "react-native";
 import { Input } from "@rneui/themed";
 
-import { useAuthDispatch, login } from "context/AuthContext";
+import { useAuthDispatch, login, tryLocalLogin } from "context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useAuthDispatch();
+
+  useEffect(() => {
+    tryLocalLogin(dispatch);
+  }, []);
 
   return (
     <View>
