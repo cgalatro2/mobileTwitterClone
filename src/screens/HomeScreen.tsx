@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { BottomSheet, ListItem, Avatar } from "@rneui/themed";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useAuth } from "context/AuthContext";
 import serverAPI from "api/serverAPI";
 
 import Write from "screens/WriteTweet";
@@ -12,6 +13,8 @@ export default function HomeScreen({ navigation }) {
   const [isWriting, setIsWriting] = useState(false);
 
   const insets = useSafeAreaInsets();
+
+  const state = useAuth();
 
   const getTweets = async () => {
     const response = await serverAPI.get("/tweets");

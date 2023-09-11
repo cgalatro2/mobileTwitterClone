@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, Button } from "react-native";
 import { Input, Text } from "@rneui/themed";
 
-import { useAuth, useAuthDispatch, signup, logout } from "context/AuthContext";
+import { useAuth, useAuthDispatch, login, logout } from "context/AuthContext";
 
 export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ export default function SignupScreen({ navigation }) {
       {state.errorMessage ? <Text>{state.errorMessage}</Text> : null}
       <Button
         title="Sign tf up"
-        onPress={() => signup(dispatch, { email, password })}
+        onPress={() => login(dispatch, { email, password }, true)}
       />
       <Button
         title="Already have an account? Sign in"

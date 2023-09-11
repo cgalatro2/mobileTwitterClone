@@ -18,7 +18,7 @@ export default () => {
 
   return (
     <NavigationContainer>
-      {state.token !== "" ? (
+      {state.token ? (
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
