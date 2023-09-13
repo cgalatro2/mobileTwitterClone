@@ -23,16 +23,28 @@ const initialState: AuthState = {
   user: { username: "", userId: "", email: "" },
 };
 
-export async function login(dispatch, { email, password }, signup = false) {
+type LoginArgs = {
+  username?: string;
+  email: string;
+  password: string;
+};
+export async function login(
+  dispatch,
+  { username, email, password }: LoginArgs,
+  signup = false
+) {
   try {
     const response = await serverAPI.post(`/${signup ? "signup" : "login"}`, {
+      username,
       email,
       password,
     });
+
     if (response?.data?.token && response?.data?.user) {
       await SecureStore.setItemAsync("token", response.data.token);
       const user = JSON.parse(response.data.user);
       await SecureStore.setItemAsync("userId", user._id);
+
       dispatch({
         type: "LOGIN",
         payload: { token: response.data.token, user },
@@ -115,7 +127,7 @@ function authReducer(state: AuthState, action: any) {
       };
     }
     case "LOGOUT": {
-      return { ...state, token: "" };
+      return { ...initialState };
     }
     case "ERROR": {
       return { ...state, errorMessage: action.payload };
