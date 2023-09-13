@@ -1,23 +1,27 @@
 import { Button, FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-import { BottomSheet, ListItem, Avatar } from "@rneui/themed";
+import { BottomSheet } from "@rneui/themed";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAuth } from "context/AuthContext";
 import serverAPI from "api/serverAPI";
 
 import Write from "screens/WriteTweet";
+import Tweet from "components/Tweet";
 
 export default function HomeScreen({ navigation }) {
   const [tweets, setTweets] = useState([]);
   const [isWriting, setIsWriting] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   const insets = useSafeAreaInsets();
 
   const state = useAuth();
 
   const getTweets = async () => {
+    setIsFetching(true);
     const response = await serverAPI.get("/tweets");
+    setIsFetching(false);
     setTweets(response.data);
   };
 
@@ -33,15 +37,8 @@ export default function HomeScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const renderItem = ({ item }) => (
-    <ListItem bottomDivider>
-      {/* <Avatar source={{ uri: item.avatar_url }} /> */}
-      <ListItem.Content>
-        <ListItem.Title>{item.content}</ListItem.Title>
-        {/* <ListItem.Subtitle>{item.subtitle}</ListItem.Subtitle> */}
-      </ListItem.Content>
-      <ListItem.Chevron />
-    </ListItem>
+  const renderItem = ({ item: { content, userId } }) => (
+    <Tweet content={content} userId={userId} />
   );
 
   const closeModal = () => setIsWriting(false);
@@ -49,6 +46,8 @@ export default function HomeScreen({ navigation }) {
   return (
     <SafeAreaView>
       <FlatList
+        refreshing={isFetching}
+        onRefresh={getTweets}
         keyExtractor={(item) => item._id}
         data={tweets}
         renderItem={renderItem}
@@ -67,7 +66,7 @@ export default function HomeScreen({ navigation }) {
           ...styles.bottomSheetContainer,
         }}
       >
-        <Write refetchTweets={getTweets} close={closeModal} />
+        <Write close={closeModal} />
       </BottomSheet>
     </SafeAreaView>
   );

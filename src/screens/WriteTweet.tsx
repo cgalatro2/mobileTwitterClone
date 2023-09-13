@@ -3,32 +3,31 @@ import { Button, View, StyleSheet } from "react-native";
 import { Input } from "@rneui/themed";
 
 import serverAPI from "api/serverAPI";
+import { useAuth } from "context/AuthContext";
 
 type Props = {
   close: () => void;
-  refetchTweets: () => void;
 };
 
-export default function WriteTweet({ close, refetchTweets }: Props) {
+export default function WriteTweet({ close }: Props) {
   const [post, setPost] = useState("");
 
-  const postTweet = () => {
-    serverAPI
-      .post("/tweets", { content: post })
-      .then(() => {
-        close();
-        refetchTweets();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const { user } = useAuth();
+
+  const postTweet = async () => {
+    try {
+      await serverAPI.post("/tweets", { content: post, userId: user.userId });
+      close();
+    } catch (err) {
+      console.log(`error posting tweet: ${err}`);
+    }
   };
 
   return (
     <View>
       <View style={styles.header}>
         <Button title="Close" onPress={close} />
-        <Button title="Post" onPress={postTweet} />
+        <Button title="Post" onPress={close} />
       </View>
       <Input
         value={post}
