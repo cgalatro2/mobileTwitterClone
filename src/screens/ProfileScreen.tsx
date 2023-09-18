@@ -7,7 +7,7 @@ export default function ProfileScreen() {
 
   return (
     <>
-      <Text>Profile screen babay</Text>
+      <Text>Profile screen</Text>
       <Button title="Logout" onPress={() => logout(dispatch)} />
     </>
   );

@@ -12,11 +12,13 @@ type Props = {
 export default function WriteTweet({ close }: Props) {
   const [post, setPost] = useState("");
 
-  const { user } = useAuth();
+  const {
+    user: { username },
+  } = useAuth();
 
   const postTweet = async () => {
     try {
-      await serverAPI.post("/tweets", { content: post, userId: user.userId });
+      await serverAPI.post("/tweets", { content: post, username });
       close();
     } catch (err) {
       console.log(`error posting tweet: ${err}`);
@@ -27,7 +29,7 @@ export default function WriteTweet({ close }: Props) {
     <View>
       <View style={styles.header}>
         <Button title="Close" onPress={close} />
-        <Button title="Post" onPress={close} />
+        <Button title="Post" onPress={postTweet} />
       </View>
       <Input
         value={post}

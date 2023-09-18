@@ -12,7 +12,6 @@ type AuthState = {
   errorMessage: string;
   user: {
     username: string;
-    userId: string;
     email: string;
   };
 };
@@ -20,7 +19,7 @@ type AuthState = {
 const initialState: AuthState = {
   token: null,
   errorMessage: "",
-  user: { username: "", userId: "", email: "" },
+  user: { username: "", email: "" },
 };
 
 type LoginArgs = {
@@ -41,13 +40,14 @@ export async function login(
     });
 
     if (response?.data?.token && response?.data?.user) {
-      await SecureStore.setItemAsync("token", response.data.token);
+      const { token } = response.data;
       const user = JSON.parse(response.data.user);
-      await SecureStore.setItemAsync("userId", user._id);
+      await SecureStore.setItemAsync("token", token);
+      await SecureStore.setItemAsync("username", user.username);
 
       dispatch({
         type: "LOGIN",
-        payload: { token: response.data.token, user },
+        payload: { token, user },
       });
     } else {
       console.log(
@@ -67,16 +67,16 @@ export async function login(
 
 export async function logout(dispatch) {
   await SecureStore.deleteItemAsync("token");
-  await SecureStore.deleteItemAsync("userId");
+  await SecureStore.deleteItemAsync("username");
   dispatch({ type: "LOGOUT" });
 }
 
 export async function tryLocalLogin(dispatch) {
   try {
     const token = await SecureStore.getItemAsync("token");
-    const userId = await SecureStore.getItemAsync("userId");
-    if (token && userId) {
-      const response = await serverAPI.get("/users", { params: { userId } });
+    const username = await SecureStore.getItemAsync("username");
+    if (token && username) {
+      const response = await serverAPI.get(`/users/${username}`);
       if (response.data) {
         const user = JSON.parse(response.data.user);
         dispatch({ type: "LOGIN", payload: { token, user } });
@@ -114,7 +114,7 @@ function authReducer(state: AuthState, action: any) {
     case "LOGIN": {
       const {
         token,
-        user: { username, email, _id },
+        user: { username, email },
       } = action.payload;
       return {
         errorMessage: "",
@@ -122,7 +122,6 @@ function authReducer(state: AuthState, action: any) {
         user: {
           username: username,
           email: email,
-          userId: _id,
         },
       };
     }
