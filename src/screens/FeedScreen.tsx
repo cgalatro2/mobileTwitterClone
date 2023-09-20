@@ -3,20 +3,17 @@ import { useEffect, useState } from "react";
 import { BottomSheet } from "@rneui/themed";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useAuth } from "context/AuthContext";
 import serverAPI from "api/serverAPI";
 
-import Write from "screens/WriteTweet";
+import Write from "components/WriteTweet";
 import Tweet from "components/Tweet";
 
-export default function HomeScreen({ navigation }) {
+export default function FeedScreen({ navigation }) {
   const [tweets, setTweets] = useState([]);
   const [isWriting, setIsWriting] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
 
   const insets = useSafeAreaInsets();
-
-  const state = useAuth();
 
   const getTweets = async () => {
     setIsFetching(true);
@@ -37,8 +34,8 @@ export default function HomeScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const renderItem = ({ item: { content, userId } }) => (
-    <Tweet content={content} userId={userId} />
+  const renderItem = ({ item: { content, username } }) => (
+    <Tweet content={content} username={username} navigation={navigation} />
   );
 
   const closeModal = () => setIsWriting(false);

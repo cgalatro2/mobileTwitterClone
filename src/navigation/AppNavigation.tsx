@@ -6,7 +6,7 @@ import { Home, User } from "react-native-feather";
 import ProfileScreen from "@screens/ProfileScreen";
 import SignupScreen from "@screens/SignupScreen";
 import LoginScreen from "@screens/LoginScreen";
-import HomeScreen from "@screens/HomeScreen";
+import HomeStack from "./HomeStack";
 
 import { useAuth } from "context/AuthContext";
 
@@ -34,8 +34,8 @@ export default () => {
         >
           <Tab.Screen
             name="Home"
-            component={HomeScreen}
-            options={{ title: "Feed" }}
+            component={HomeStack}
+            options={{ headerShown: false }}
           />
           <Tab.Screen
             name="Profile"
