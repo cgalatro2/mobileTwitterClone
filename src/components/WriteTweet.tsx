@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, View, StyleSheet } from "react-native";
 import { Input } from "@rneui/themed";
 
-import serverAPI from "api/serverAPI";
+import { usePostTweet } from "api/mutations/usePostTweet";
 import { useAuth } from "context/AuthContext";
 
 type Props = {
@@ -16,20 +16,17 @@ export default function WriteTweet({ close }: Props) {
     user: { username },
   } = useAuth();
 
-  const postTweet = async () => {
-    try {
-      await serverAPI.post("/tweets", { content: post, username });
-      close();
-    } catch (err) {
-      console.log(`error posting tweet: ${err}`);
-    }
+  const { postTweet } = usePostTweet();
+  const postTweetAndClose = () => {
+    postTweet({ content: post, username });
+    close();
   };
 
   return (
     <View>
       <View style={styles.header}>
         <Button title="Close" onPress={close} />
-        <Button title="Post" onPress={postTweet} />
+        <Button title="Post" onPress={postTweetAndClose} />
       </View>
       <Input
         value={post}

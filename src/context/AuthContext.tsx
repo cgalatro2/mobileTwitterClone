@@ -40,8 +40,7 @@ export async function login(
     });
 
     if (response?.data?.token && response?.data?.user) {
-      const { token } = response.data;
-      const user = JSON.parse(response.data.user);
+      const { token, user } = response.data;
       await SecureStore.setItemAsync("token", token);
       await SecureStore.setItemAsync("username", user.username);
 
@@ -78,7 +77,7 @@ export async function tryLocalLogin(dispatch) {
     if (token && username) {
       const response = await serverAPI.get(`/users/${username}`);
       if (response.data) {
-        const user = JSON.parse(response.data.user);
+        const { user } = response.data;
         dispatch({ type: "LOGIN", payload: { token, user } });
       }
     } else {

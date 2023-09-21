@@ -3,28 +3,18 @@ import { useEffect, useState } from "react";
 import { BottomSheet } from "@rneui/themed";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import serverAPI from "api/serverAPI";
+import { useTweets } from "api/queries/useTweets";
 
 import Write from "components/WriteTweet";
 import Tweet from "components/Tweet";
+import LoadingScreen from "./LoadingScreen";
 
 export default function FeedScreen({ navigation }) {
-  const [tweets, setTweets] = useState([]);
   const [isWriting, setIsWriting] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+
+  const { data: tweets, isLoading, refetch } = useTweets();
 
   const insets = useSafeAreaInsets();
-
-  const getTweets = async () => {
-    setIsFetching(true);
-    const response = await serverAPI.get("/tweets");
-    setIsFetching(false);
-    setTweets(response.data);
-  };
-
-  useEffect(() => {
-    getTweets();
-  }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -34,17 +24,24 @@ export default function FeedScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const renderItem = ({ item: { content, username } }) => (
-    <Tweet content={content} username={username} navigation={navigation} />
-  );
+  const renderItem = ({ item }) => {
+    const { content, username } = item;
+    return (
+      <Tweet content={content} username={username} navigation={navigation} />
+    );
+  };
 
   const closeModal = () => setIsWriting(false);
+
+  if (isLoading || !tweets) {
+    return <LoadingScreen />;
+  }
 
   return (
     <SafeAreaView>
       <FlatList
-        refreshing={isFetching}
-        onRefresh={getTweets}
+        refreshing={isLoading}
+        onRefresh={refetch}
         keyExtractor={(item) => item._id}
         data={tweets}
         renderItem={renderItem}
