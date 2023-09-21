@@ -42,7 +42,7 @@ export default function FeedScreen({ navigation }) {
       <FlatList
         refreshing={isLoading}
         onRefresh={refetch}
-        keyExtractor={(item) => item.toString()}
+        keyExtractor={(item) => item._id}
         data={tweets}
         renderItem={renderItem}
       />
