@@ -4,11 +4,12 @@ import { Text } from "@rneui/themed";
 type Props = {
   text: string;
   onPress: () => void;
+  style?: any;
 };
 
-export default function Link({ text, onPress }: Props) {
+export default function Link({ text, onPress, style }: Props) {
   return (
-    <Text style={styles.link} onPress={onPress}>
+    <Text style={{ ...styles.link, ...style }} onPress={onPress}>
       {text}
     </Text>
   );

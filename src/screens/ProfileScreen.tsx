@@ -1,9 +1,18 @@
 import { Button } from "react-native";
+import { Text } from "@rneui/themed";
 
-import { useAuthDispatch, logout } from "context/AuthContext";
+import { useAuthDispatch, useAuth, logout } from "context/AuthContext";
 
 export default function ProfileScreen() {
   const dispatch = useAuthDispatch();
+  const {
+    user: { username },
+  } = useAuth();
 
-  return <Button title="Logout" onPress={() => logout(dispatch)} />;
+  return (
+    <>
+      <Text>{`Currently logged in as ${username}`}</Text>
+      <Button title="Logout" onPress={() => logout(dispatch)} />
+    </>
+  );
 }

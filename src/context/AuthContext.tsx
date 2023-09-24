@@ -11,6 +11,7 @@ type AuthState = {
   token: string | null;
   errorMessage: string;
   user: {
+    _id: string;
     username: string;
     email: string;
   };
@@ -19,7 +20,7 @@ type AuthState = {
 const initialState: AuthState = {
   token: null,
   errorMessage: "",
-  user: { username: "", email: "" },
+  user: { username: "", email: "", _id: "" },
 };
 
 type LoginArgs = {
@@ -113,14 +114,15 @@ function authReducer(state: AuthState, action: any) {
     case "LOGIN": {
       const {
         token,
-        user: { username, email },
+        user: { username, email, _id },
       } = action.payload;
       return {
         errorMessage: "",
         token,
         user: {
-          username: username,
-          email: email,
+          username,
+          email,
+          _id,
         },
       };
     }
