@@ -1,5 +1,5 @@
 import { StyleSheet, Pressable } from "react-native";
-import { ListItem, Text } from "@rneui/themed";
+import { ListItem, Text, Icon } from "@rneui/themed";
 
 import Link from "./Link";
 
@@ -16,15 +16,14 @@ export default function Tweet({ navigation, content, username }: Props) {
     >
       <ListItem bottomDivider>
         <ListItem.Content>
-          <ListItem.Title style={styles.user}>
+          <ListItem.Title style={styles.content}>
             <Link
               text={username}
               onPress={() => navigation.navigate("User", { username })}
             />
           </ListItem.Title>
-          <ListItem.Content>
-            <Text>{content}</Text>
-          </ListItem.Content>
+          <Text style={styles.content}>{content}</Text>
+          <Icon name="favorite" color={"pink"} />
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
@@ -33,7 +32,7 @@ export default function Tweet({ navigation, content, username }: Props) {
 }
 
 const styles = StyleSheet.create({
-  user: {
+  content: {
     marginBottom: 5,
   },
 });
