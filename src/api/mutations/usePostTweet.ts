@@ -13,8 +13,8 @@ const mutationFn = async ({ content, username }) => {
     content,
     username,
   });
-  if (status === 418 || status === 422) {
-    throw new Error(data.message);
+  if (status !== 200) {
+    throw new Error(data);
   }
   return data;
 };

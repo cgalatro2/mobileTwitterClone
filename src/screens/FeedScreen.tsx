@@ -24,12 +24,7 @@ export default function FeedScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const renderItem = ({ item }) => {
-    const { content, username } = item;
-    return (
-      <Tweet content={content} username={username} navigation={navigation} />
-    );
-  };
+  const renderItem = ({ item }) => <Tweet {...item} navigation={navigation} />;
 
   const closeModal = () => setIsWriting(false);
 
