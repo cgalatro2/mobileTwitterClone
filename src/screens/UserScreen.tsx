@@ -38,12 +38,7 @@ export default function UserScreen({ route, navigation }) {
     return <LoadingScreen />;
   }
 
-  const renderItem = ({ item }) => {
-    const { content, username } = item;
-    return (
-      <Tweet content={content} username={username} navigation={navigation} />
-    );
-  };
+  const renderItem = ({ item }) => <Tweet {...item} navigation={navigation} />;
 
   const { followers, following } = user;
   const isFollowing = followers.includes(currentUserId);

@@ -25,6 +25,7 @@ const mutationFn = async ({
 
 export const useUnfollow = () => {
   const queryClient = useQueryClient();
+  // TODO type useMutation
   const { mutate: unfollowUser } = useMutation(["follow"], mutationFn, {
     onSuccess: () => {
       queryClient.refetchQueries(["user"]);
