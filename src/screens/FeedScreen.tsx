@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTweets } from "api/queries/useTweets";
 
 import Write from "components/WriteTweet";
-import Tweet from "components/Tweet";
+import TweetCard from "components/TweetCard";
 import LoadingScreen from "./LoadingScreen";
 
 export default function FeedScreen({ navigation }) {
@@ -24,7 +24,9 @@ export default function FeedScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const renderItem = ({ item }) => <Tweet {...item} navigation={navigation} />;
+  const renderItem = ({ item }) => (
+    <TweetCard tweet={{ ...item }} navigation={navigation} />
+  );
 
   const closeModal = () => setIsWriting(false);
 
