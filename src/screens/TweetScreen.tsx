@@ -1,14 +1,18 @@
 import { useEffect } from "react";
-import { View } from "react-native";
-import { Text } from "@rneui/themed";
+import { Pressable, StyleSheet } from "react-native";
+import { ListItem, Text } from "@rneui/themed";
+
+import { Tweet } from "api/types/Tweet";
+
+import Link from "components/Link";
 
 type Props = {
-  route: { params: { content: string; username: string } };
+  route: { params: Tweet };
   navigation: any;
 };
 
-export default function Tweet({ navigation, route }: Props) {
-  const { content, username } = route.params;
+export default function TweetScreen({ navigation, route }: Props) {
+  const { _id, content, username, timestamp, likes } = route.params;
 
   useEffect(() => {
     navigation.setOptions({
@@ -16,11 +20,50 @@ export default function Tweet({ navigation, route }: Props) {
     });
   }, []);
 
+  const likeCount = likes?.length ?? 0;
+
   return (
-    <View>
-      <Text h3>{username}</Text>
-      <Text>{content}</Text>
-      <Text>Soon to be comments</Text>
-    </View>
+    <Pressable>
+      <ListItem bottomDivider>
+        <ListItem.Content>
+          <ListItem.Title style={styles.row}>
+            <Link
+              text={username}
+              onPress={() => navigation.navigate("User", { username })}
+            />
+          </ListItem.Title>
+          <Text style={styles.row}>{content}</Text>
+          <Text>{timestamp?.toString()}</Text>
+        </ListItem.Content>
+      </ListItem>
+      <ListItem>
+        <ListItem.Content>
+          <Pressable
+            style={{ ...styles.interactionRow }}
+            onPress={() => console.log("show all likers")}
+          >
+            <Link
+              text={`${likeCount} likes`}
+              onPress={() => navigation.navigate("Likes", { _id })}
+            ></Link>
+          </Pressable>
+        </ListItem.Content>
+      </ListItem>
+    </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+  interactionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  row: {
+    marginBottom: 8,
+  },
+});

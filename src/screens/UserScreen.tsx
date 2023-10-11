@@ -9,7 +9,7 @@ import { useUnfollow } from "api/mutations/useUnfollow";
 import { useAuth } from "context/AuthContext";
 
 import LoadingScreen from "./LoadingScreen";
-import Tweet from "components/Tweet";
+import TweetCard from "components/TweetCard";
 import Link from "components/Link";
 
 export default function UserScreen({ route, navigation }) {
@@ -38,7 +38,9 @@ export default function UserScreen({ route, navigation }) {
     return <LoadingScreen />;
   }
 
-  const renderItem = ({ item }) => <Tweet {...item} navigation={navigation} />;
+  const renderItem = ({ item }) => (
+    <TweetCard {...item} navigation={navigation} />
+  );
 
   const { followers, following } = user;
   const isFollowing = followers.includes(currentUserId);
