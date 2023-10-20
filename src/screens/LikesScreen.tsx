@@ -9,10 +9,11 @@ import { useFollow } from "api/mutations/useFollow";
 import { useUnfollow } from "api/mutations/useUnfollow";
 
 type Props = {
-  _id: string;
+  navigation: any;
+  route: { params: { _id: string } };
 };
 
-export default function LikesScreen({ navigation, route }) {
+export default function LikesScreen({ navigation, route }: Props) {
   const { _id } = route.params;
   const { data: likers } = useLikes(_id);
 
