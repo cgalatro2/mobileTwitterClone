@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { ListItem, Text } from "@rneui/themed";
+import format from "date-fns/format";
 
 import { Tweet } from "api/types/Tweet";
 
@@ -21,6 +22,9 @@ export default function TweetScreen({ navigation, route }: Props) {
   }, []);
 
   const likeCount = likes?.length ?? 0;
+  const time = timestamp
+    ? format(new Date(timestamp), "Pp")
+    : new Date().toISOString();
 
   return (
     <Pressable>
@@ -33,7 +37,7 @@ export default function TweetScreen({ navigation, route }: Props) {
             />
           </ListItem.Title>
           <Text style={styles.row}>{content}</Text>
-          <Text>{timestamp?.toString()}</Text>
+          <Text>{time}</Text>
         </ListItem.Content>
       </ListItem>
       <ListItem>
