@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { FlatList, StyleSheet, Pressable } from "react-native";
 import { Button, ListItem, Text } from "@rneui/themed";
 
-import { useLikes } from "api/queries/useLikes";
+import { useFollowers } from "api/queries/useFollowers";
 import { useUser } from "api/queries/useUser";
 import { useAuth } from "context/AuthContext";
 import { useFollow } from "api/mutations/useFollow";
@@ -10,17 +10,17 @@ import { useUnfollow } from "api/mutations/useUnfollow";
 
 type Props = {
   navigation: any;
-  route: { params: { _id: string } };
+  route: { params: { username: string } };
 };
 
-export default function LikesScreen({ navigation, route }: Props) {
-  const { _id } = route.params;
-  const { data: likers } = useLikes(_id);
+export default function FollowersScreen({ navigation, route }: Props) {
+  const { username } = route.params;
+  const { data: followers } = useFollowers(username);
 
   const {
-    user: { username },
+    user: { currentUsername },
   } = useAuth();
-  const { data: userData } = useUser(username);
+  const { data: userData } = useUser(currentUsername);
   const following = userData?.following ?? [];
 
   const { followUser } = useFollow();
@@ -38,12 +38,12 @@ export default function LikesScreen({ navigation, route }: Props) {
     const onPressFollow = () => {
       if (isFollowing) {
         unfollowUser({
-          unfollowingUsername: username,
+          unfollowingUsername: currentUsername,
           usernameToUnfollow: item.username,
         });
       } else {
         followUser({
-          followingUsername: username,
+          followingUsername: currentUsername,
           usernameToFollow: item.username,
         });
       }
@@ -56,7 +56,7 @@ export default function LikesScreen({ navigation, route }: Props) {
             <ListItem.Title>
               <Text>{item.username}</Text>
             </ListItem.Title>
-            {item.username !== username && (
+            {item.username !== currentUsername && (
               <Button
                 title={isFollowing ? "Unfollow" : "Follow"}
                 onPress={onPressFollow}
@@ -68,7 +68,7 @@ export default function LikesScreen({ navigation, route }: Props) {
     );
   };
 
-  return <FlatList data={likers} renderItem={renderItem} />;
+  return <FlatList data={followers} renderItem={renderItem} />;
 }
 
 const styles = StyleSheet.create({

@@ -65,12 +65,12 @@ export default function UserScreen({ route, navigation }) {
         <View style={styles.network}>
           <Link
             text={`${followers.length} followers`}
-            onPress={() => console.log("followers")}
+            onPress={() => navigation.navigate("Followers", { username })}
             style={{ marginHorizontal: 11 }}
           />
           <Link
             text={`${following.length} following`}
-            onPress={() => console.log("following")}
+            onPress={() => navigation.navigate("Following", { username })}
           />
         </View>
         {currentUsername !== username ? (
