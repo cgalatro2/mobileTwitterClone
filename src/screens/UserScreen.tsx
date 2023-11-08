@@ -39,7 +39,7 @@ export default function UserScreen({ route, navigation }) {
   }
 
   const renderItem = ({ item }) => (
-    <TweetCard {...item} navigation={navigation} />
+    <TweetCard tweet={item} navigation={navigation} />
   );
 
   const { followers, following } = user;
