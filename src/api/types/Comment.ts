@@ -1,9 +1,10 @@
+import { Tweet } from "./Tweet";
 import { User } from "./User";
 
-export type Tweet = {
+export type Comment = {
   _id: string;
   content: string;
   user: User;
+  tweet: Tweet;
   likes: string[];
-  timestamp: Date;
 };

@@ -12,11 +12,18 @@ import LoadingScreen from "./LoadingScreen";
 import TweetCard from "components/TweetCard";
 import Link from "components/Link";
 
-export default function UserScreen({ route, navigation }) {
-  const { username } = route.params;
+type Props = {
+  navigation: any;
+  route: { params: { userId: string; username: string } };
+};
 
-  const authState = useAuth();
-  const { username: currentUsername, _id: currentUserId } = authState.user;
+export default function UserScreen({ route, navigation }: Props) {
+  const { userId, username } = route.params;
+
+  const {
+    user: { username: currentUsername, _id: currentUserId },
+  } = useAuth();
+
   const { followUser } = useFollow();
   const { unfollowUser } = useUnfollow();
 
@@ -31,7 +38,7 @@ export default function UserScreen({ route, navigation }) {
     data: tweets,
     isLoading: isLoadingTweets,
     refetch: refetchTweets,
-  } = useTweets(username);
+  } = useTweets(userId);
 
   const isLoading = isLoadingUser || isLoadingTweets;
   if (!user || isLoading) {
