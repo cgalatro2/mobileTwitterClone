@@ -10,15 +10,15 @@ type Props = {
 };
 
 export default function WriteTweet({ close }: Props) {
-  const [post, setPost] = useState("");
+  const [content, setContent] = useState("");
 
   const {
-    user: { username },
+    user: { _id: userId },
   } = useAuth();
 
   const { postTweet } = usePostTweet();
   const postTweetAndClose = () => {
-    postTweet({ content: post, username });
+    postTweet({ content, user: userId });
     close();
   };
 
@@ -29,8 +29,8 @@ export default function WriteTweet({ close }: Props) {
         <Button title="Post" onPress={postTweetAndClose} />
       </View>
       <Input
-        value={post}
-        onChangeText={setPost}
+        value={content}
+        onChangeText={setContent}
         placeholder="What's happening?"
         multiline
       />

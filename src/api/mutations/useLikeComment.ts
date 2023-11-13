@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "react-query";
 import serverAPI from "api/serverAPI";
 import { Tweet } from "api/types/Tweet";
 
-type LikeTweetRequest = {
+type LikeCommentRequest = {
   _id: string;
   user: string;
   isLiked: boolean;
@@ -22,10 +22,10 @@ const mutationFn = async ({ _id, user, isLiked = true }) => {
   return data;
 };
 
-export const useLikeTweet = () => {
+export const useLikeComment = () => {
   const queryClient = useQueryClient();
-  const { mutate: likeTweet } = useMutation<Tweet, any, LikeTweetRequest>(
-    ["tweets", "like"],
+  const { mutate: likeComment } = useMutation<Tweet, any, LikeCommentRequest>(
+    ["comments", "like"],
     mutationFn,
     {
       onSuccess: () => {
@@ -37,5 +37,5 @@ export const useLikeTweet = () => {
     }
   );
 
-  return { likeTweet };
+  return { likeComment };
 };

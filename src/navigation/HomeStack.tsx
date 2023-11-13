@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import FeedScreen from "screens/FeedScreen";
+import WriteCommentScreen from "screens/WriteCommentScreen";
 import UserScreen from "screens/UserScreen";
 import TweetScreen from "screens/TweetScreen";
 import LikesScreen from "screens/LikesScreen";
@@ -13,6 +14,7 @@ export default function HomeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Feed" component={FeedScreen} />
+      <Stack.Screen name="Comment" component={WriteCommentScreen} />
       <Stack.Screen name="User" component={UserScreen} />
       <Stack.Screen name="Tweet" component={TweetScreen} />
       <Stack.Screen name="Likes" component={LikesScreen} />

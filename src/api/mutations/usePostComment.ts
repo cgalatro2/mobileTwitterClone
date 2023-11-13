@@ -3,14 +3,16 @@ import { useMutation, useQueryClient } from "react-query";
 import serverAPI from "api/serverAPI";
 import { Tweet } from "api/types/Tweet";
 
-type PostTweetRequest = {
+type PostCommentRequest = {
   content: string;
   user: string;
+  tweetId: string;
 };
 
-const mutationFn = async ({ content, user }) => {
-  const { status, data } = await serverAPI.post("/tweets", {
-    content,
+const mutationFn = async ({ content, user, tweetId }) => {
+  console.log("content", content);
+  const { status, data } = await serverAPI.post(`/tweets/${tweetId}/comment`, {
+    content: content,
     user,
   });
   if (status !== 200) {
@@ -19,10 +21,10 @@ const mutationFn = async ({ content, user }) => {
   return data;
 };
 
-export const usePostTweet = () => {
+export const usePostComment = () => {
   const queryClient = useQueryClient();
-  const { mutate: postTweet } = useMutation<Tweet, any, PostTweetRequest>(
-    ["tweets"],
+  const { mutate: postComment } = useMutation<Tweet, any, PostCommentRequest>(
+    ["tweets", "comment"],
     mutationFn
     // {
     //   onMutate: async (newTweet: Tweet) => {
@@ -46,5 +48,5 @@ export const usePostTweet = () => {
     // }
   );
 
-  return { postTweet };
+  return { postComment };
 };

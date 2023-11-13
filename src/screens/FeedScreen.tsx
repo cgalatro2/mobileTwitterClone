@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTweets } from "api/queries/useTweets";
 
-import Write from "components/WriteTweet";
+import WriteTweet from "components/WriteTweet";
 import TweetCard from "components/TweetCard";
 import LoadingScreen from "./LoadingScreen";
 
@@ -57,7 +57,7 @@ export default function FeedScreen({ navigation }) {
           ...styles.bottomSheetContainer,
         }}
       >
-        <Write close={closeModal} />
+        <WriteTweet close={closeModal} />
       </BottomSheet>
     </SafeAreaView>
   );
