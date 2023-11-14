@@ -12,7 +12,7 @@ type Props = {
   navigation: any;
 };
 
-export default function TweetCard({ navigation, comment }: Props) {
+export default function CommentCard({ navigation, comment }: Props) {
   const { likeComment } = useLikeComment();
   const {
     user: { _id: currentUserId },

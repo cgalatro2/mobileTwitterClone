@@ -16,7 +16,7 @@ export default function WriteComment({ navigation, route }: Props) {
     tweet: {
       content: tweetContent,
       user: { username: tweetUsername },
-      timestamp,
+      createdAt,
       _id: tweetId,
     },
   } = route.params;

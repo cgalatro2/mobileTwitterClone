@@ -15,15 +15,14 @@ type Props = {
 };
 
 export default function TweetScreen({ navigation, route }: Props) {
+  const { tweet } = route.params;
   const {
-    tweet: {
-      _id,
-      content,
-      user: { username },
-      timestamp,
-      likes,
-    },
-  } = route.params;
+    _id,
+    content,
+    user: { username },
+    createdAt,
+    likes,
+  } = tweet;
 
   const { data: comments } = useComments(_id);
 
@@ -34,9 +33,9 @@ export default function TweetScreen({ navigation, route }: Props) {
   }, []);
 
   const likeCount = likes?.length ?? 0;
-  const time = timestamp
-    ? format(new Date(timestamp), "Pp")
-    : new Date().toISOString();
+  const time = createdAt
+    ? format(new Date(createdAt), "Pp")
+    : new Date().toLocaleDateString();
 
   return (
     <View>
@@ -55,15 +54,12 @@ export default function TweetScreen({ navigation, route }: Props) {
         </ListItem>
         <ListItem>
           <ListItem.Content>
-            <Pressable
-              style={{ ...styles.interactionRow }}
-              onPress={() => console.log("show all likers")}
-            >
+            <View style={{ ...styles.interactionRow }}>
               <Link
                 text={`${likeCount} likes`}
                 onPress={() => navigation.navigate("Likes", { _id })}
               ></Link>
-            </Pressable>
+            </View>
           </ListItem.Content>
         </ListItem>
       </Pressable>
