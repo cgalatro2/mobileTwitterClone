@@ -10,7 +10,6 @@ type PostCommentRequest = {
 };
 
 const mutationFn = async ({ content, user, tweetId }) => {
-  console.log("content", content);
   const { status, data } = await serverAPI.post(`/tweets/${tweetId}/comment`, {
     content: content,
     user,

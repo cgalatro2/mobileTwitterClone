@@ -30,7 +30,10 @@ export default function TweetCard({ navigation, tweet }: Props) {
             <Link
               text={user?.username}
               onPress={() =>
-                navigation.navigate("User", { username: user?.username })
+                navigation.navigate("User", {
+                  username: user?.username,
+                  userId: user?._id,
+                })
               }
             />
           </ListItem.Title>

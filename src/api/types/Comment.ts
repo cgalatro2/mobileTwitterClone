@@ -7,4 +7,6 @@ export type Comment = {
   user: User;
   tweet: Tweet;
   likes: string[];
+  createdAt: Date;
+  updatedAt: Date;
 };

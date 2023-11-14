@@ -5,5 +5,6 @@ export type Tweet = {
   content: string;
   user: User;
   likes: string[];
-  timestamp: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };

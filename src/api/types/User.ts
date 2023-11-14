@@ -3,7 +3,8 @@ export type User = {
   email: string;
   username: string;
   password: string;
-  createdAt: Date;
   followers: string[];
   following: string[];
+  createdAt: Date;
+  updatedAt: Date;
 };
