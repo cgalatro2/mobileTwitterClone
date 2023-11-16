@@ -21,11 +21,8 @@ export default function UserScreen({ route, navigation }: Props) {
   const { userId, username } = route.params;
 
   const {
-    user: { username: currentUsername, _id: currentUserId },
+    currentUser: { currentUsername, currentUserId },
   } = useAuth();
-
-  const { followUser } = useFollow();
-  const { unfollowUser } = useUnfollow();
 
   useEffect(() => {
     navigation.setOptions({
@@ -33,7 +30,10 @@ export default function UserScreen({ route, navigation }: Props) {
     });
   }, []);
 
-  const { data: user, isLoading: isLoadingUser } = useUser(username);
+  const { followUser } = useFollow();
+  const { unfollowUser } = useUnfollow();
+
+  const { data: user, isLoading: isLoadingUser } = useUser(userId);
   const {
     data: tweets,
     isLoading: isLoadingTweets,

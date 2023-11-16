@@ -18,7 +18,7 @@ export default function FollowersScreen({ navigation, route }: Props) {
   const { data: followers } = useFollowers(username);
 
   const {
-    user: { username: currentUsername },
+    currentUser: { currentUsername },
   } = useAuth();
   const { data: userData } = useUser(currentUsername);
   const following = userData?.following ?? [];

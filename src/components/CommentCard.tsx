@@ -9,37 +9,41 @@ import Link from "./Link";
 
 type Props = {
   comment: Comment;
+  tweetId: string;
   navigation: any;
 };
 
-export default function CommentCard({ navigation, comment }: Props) {
-  const { likeComment } = useLikeComment();
+export default function CommentCard({ navigation, comment, tweetId }: Props) {
+  const { likeComment } = useLikeComment(tweetId);
   const {
-    user: { _id: currentUserId },
+    currentUser: { currentUserId },
   } = useAuth();
   const { user } = comment;
 
-  const isLiked = comment?.likes?.includes(currentUserId) ?? false;
-  const likeCount = comment?.likes?.length ?? 0;
+  const isLiked = comment.likes.includes(currentUserId) ?? false;
+  const likeCount = comment.likes.length ?? 0;
 
   return (
     <ListItem bottomDivider>
       <ListItem.Content>
         <ListItem.Title style={styles.content}>
           <Link
-            text={user?.username}
+            text={user.username}
             onPress={() =>
-              navigation.navigate("User", { username: user?.username })
+              navigation.navigate("User", {
+                username: user.username,
+                userId: user._id,
+              })
             }
           />
         </ListItem.Title>
-        <Text style={styles.content}>{comment?.content}</Text>
+        <Text style={styles.content}>{comment.content}</Text>
         <View style={styles.reactions}>
           <Icon
             name={`favorite${isLiked ? "" : "-outline"}`}
             color={"pink"}
             onPress={() =>
-              likeComment({ _id: comment?._id, user: currentUserId, isLiked })
+              likeComment({ _id: comment._id, user: currentUserId, isLiked })
             }
           />
           <Text style={styles.likeCount}>{likeCount}</Text>

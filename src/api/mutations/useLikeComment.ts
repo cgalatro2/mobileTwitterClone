@@ -9,7 +9,7 @@ type LikeCommentRequest = {
   isLiked: boolean;
 };
 
-const mutationFn = async ({ _id, user, isLiked = true }) => {
+const mutationFn = async ({ _id, user, isLiked }) => {
   const { status, data } = await serverAPI.post(
     `/comments/${_id}/${isLiked ? "unlike" : "like"}`,
     {
@@ -22,14 +22,14 @@ const mutationFn = async ({ _id, user, isLiked = true }) => {
   return data;
 };
 
-export const useLikeComment = () => {
+export const useLikeComment = (tweetId: string) => {
   const queryClient = useQueryClient();
   const { mutate: likeComment } = useMutation<Comment, any, LikeCommentRequest>(
     ["comments", "like"],
     mutationFn,
     {
       onSuccess: () => {
-        queryClient.refetchQueries(["tweets"]);
+        queryClient.refetchQueries(["tweet", `${tweetId}`]);
       },
       onError: (error) => {
         console.log(error.message);

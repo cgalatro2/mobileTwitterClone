@@ -1,3 +1,4 @@
+import { Comment } from "./Comment";
 import { User } from "./User";
 
 export type Tweet = {
@@ -5,6 +6,9 @@ export type Tweet = {
   content: string;
   user: User;
   likes: string[];
+  comments: string[];
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type PopulatedTweet = Omit<Tweet, "comments"> & { comments: Comment[] };

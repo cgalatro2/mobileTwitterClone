@@ -26,11 +26,11 @@ export default function WriteComment({ navigation, route }: Props) {
   const { postComment } = usePostComment();
 
   const {
-    user: { _id: userId },
+    currentUser: { currentUserId },
   } = useAuth();
 
   const postCommentAndClose = () => {
-    postComment({ content, user: userId, tweetId });
+    postComment({ content, user: currentUserId, tweetId });
     navigation.goBack();
   };
 

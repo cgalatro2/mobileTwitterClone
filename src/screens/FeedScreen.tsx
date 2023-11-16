@@ -4,6 +4,7 @@ import { BottomSheet } from "@rneui/themed";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTweets } from "api/queries/useTweets";
+import { Tweet } from "api/types/Tweet";
 
 import WriteTweet from "components/WriteTweet";
 import TweetCard from "components/TweetCard";
@@ -24,10 +25,6 @@ export default function FeedScreen({ navigation }) {
     });
   }, [navigation]);
 
-  const renderItem = ({ item }) => (
-    <TweetCard tweet={item} navigation={navigation} />
-  );
-
   const closeModal = () => setIsWriting(false);
 
   if (isLoading || !tweets) {
@@ -41,7 +38,9 @@ export default function FeedScreen({ navigation }) {
         onRefresh={refetch}
         keyExtractor={(item) => item._id}
         data={tweets}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <TweetCard tweet={item} navigation={navigation} />
+        )}
       />
       <BottomSheet
         modalProps={{
