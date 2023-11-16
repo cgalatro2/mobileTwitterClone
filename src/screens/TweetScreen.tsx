@@ -3,34 +3,39 @@ import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { ListItem, Text } from "@rneui/themed";
 import format from "date-fns/format";
 
-import { Tweet } from "api/types/Tweet";
-import { useComments } from "api/queries/useComments";
-
 import Link from "components/Link";
 import CommentCard from "components/CommentCard";
+import { useTweet } from "api/queries/useTweet";
+import LoadingScreen from "./LoadingScreen";
 
 type Props = {
-  route: { params: { tweet: Tweet } };
+  route: { params: { tweetId: string } };
   navigation: any;
 };
 
 export default function TweetScreen({ navigation, route }: Props) {
-  const { tweet } = route.params;
-  const {
-    _id,
-    content,
-    user: { username },
-    createdAt,
-    likes,
-  } = tweet;
-
-  const { data: comments } = useComments(_id);
+  const { tweetId } = route.params;
 
   useEffect(() => {
     navigation.setOptions({
       title: "Post",
     });
   }, []);
+
+  const { data: tweet, isLoading } = useTweet(tweetId);
+
+  if (isLoading || !tweet) {
+    return <LoadingScreen />;
+  }
+
+  const {
+    _id,
+    content,
+    user: { username },
+    likes,
+    comments,
+    createdAt,
+  } = tweet;
 
   const likeCount = likes?.length ?? 0;
   const time = createdAt
@@ -67,7 +72,11 @@ export default function TweetScreen({ navigation, route }: Props) {
       <FlatList
         data={comments}
         renderItem={({ item }) => (
-          <CommentCard comment={item} navigation={navigation} />
+          <CommentCard
+            comment={item}
+            tweetId={tweet._id}
+            navigation={navigation}
+          />
         )}
       />
     </View>

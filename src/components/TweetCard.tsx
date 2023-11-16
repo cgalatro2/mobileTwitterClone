@@ -19,38 +19,42 @@ export default function TweetCard({ navigation, tweet }: Props) {
   } = useAuth();
   const { user } = tweet;
 
-  const isLiked = tweet?.likes?.includes(currentUserId) ?? false;
-  const likeCount = tweet?.likes?.length ?? 0;
+  const isLiked = tweet.likes.includes(currentUserId);
+  const likeCount = tweet.likes.length;
+  const commentCount = tweet.comments.length;
 
   return (
-    <Pressable onPress={() => navigation.navigate("Tweet", { tweet })}>
+    <Pressable
+      onPress={() => navigation.navigate("Tweet", { tweetId: tweet._id })}
+    >
       <ListItem bottomDivider>
         <ListItem.Content>
           <ListItem.Title style={styles.content}>
             <Link
-              text={user?.username}
+              text={user.username}
               onPress={() =>
                 navigation.navigate("User", {
-                  username: user?.username,
-                  userId: user?._id,
+                  username: user.username,
+                  userId: user._id,
                 })
               }
             />
           </ListItem.Title>
-          <Text style={styles.content}>{tweet?.content}</Text>
+          <Text style={styles.content}>{tweet.content}</Text>
           <View style={styles.reactions}>
             <Icon
               name={`favorite${isLiked ? "" : "-outline"}`}
               color={"pink"}
               onPress={() =>
-                likeTweet({ _id: tweet?._id, user: currentUserId, isLiked })
+                likeTweet({ _id: tweet._id, user: currentUserId, isLiked })
               }
             />
-            <Text style={styles.likeCount}>{likeCount}</Text>
+            <Text style={styles.count}>{likeCount}</Text>
             <Icon
               name={"comment"}
               onPress={() => navigation.navigate("Comment", { tweet })}
             />
+            <Text style={styles.count}>{commentCount}</Text>
           </View>
         </ListItem.Content>
         <ListItem.Chevron />
@@ -67,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  likeCount: {
+  count: {
     marginLeft: 3,
     marginRight: 16,
   },
