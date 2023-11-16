@@ -13,12 +13,12 @@ export default function WriteTweet({ close }: Props) {
   const [content, setContent] = useState("");
 
   const {
-    user: { _id: userId },
+    currentUser: { currentUserId },
   } = useAuth();
 
   const { postTweet } = usePostTweet();
   const postTweetAndClose = () => {
-    postTweet({ content, user: userId });
+    postTweet({ content, user: currentUserId });
     close();
   };
 

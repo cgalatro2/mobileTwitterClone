@@ -10,17 +10,17 @@ const AuthDispatchContext = createContext(null);
 type AuthState = {
   token: string | null;
   errorMessage: string;
-  user: {
-    _id: string;
-    username: string;
-    email: string;
+  currentUser: {
+    currentUserId: string;
+    currentUsername: string;
+    currentUserEmail: string;
   };
 };
 
 const initialState: AuthState = {
   token: null,
   errorMessage: "",
-  user: { username: "", email: "", _id: "" },
+  currentUser: { currentUsername: "", currentUserEmail: "", currentUserId: "" },
 };
 
 type LoginArgs = {
@@ -43,7 +43,7 @@ export async function login(
     if (response?.data?.token && response?.data?.user) {
       const { token, user } = response.data;
       await SecureStore.setItemAsync("token", token);
-      await SecureStore.setItemAsync("username", user.username);
+      await SecureStore.setItemAsync("currentUserId", user._id);
 
       dispatch({
         type: "LOGIN",
@@ -67,16 +67,16 @@ export async function login(
 
 export async function logout(dispatch) {
   await SecureStore.deleteItemAsync("token");
-  await SecureStore.deleteItemAsync("username");
+  await SecureStore.deleteItemAsync("currentUserId");
   dispatch({ type: "LOGOUT" });
 }
 
 export async function tryLocalLogin(dispatch) {
   try {
     const token = await SecureStore.getItemAsync("token");
-    const username = await SecureStore.getItemAsync("username");
-    if (token && username) {
-      const response = await serverAPI.get(`/users/${username}`);
+    const userId = await SecureStore.getItemAsync("currentUserId");
+    if (token && userId) {
+      const response = await serverAPI.get(`/users/${userId}`);
       if (response.data) {
         const { user } = response.data;
         dispatch({ type: "LOGIN", payload: { token, user } });
@@ -119,10 +119,10 @@ function authReducer(state: AuthState, action: any) {
       return {
         errorMessage: "",
         token,
-        user: {
-          username,
-          email,
-          _id,
+        currentUser: {
+          currentUsername: username,
+          currentUserEmail: email,
+          currentUserId: _id,
         },
       };
     }

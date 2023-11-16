@@ -15,7 +15,7 @@ type Props = {
 export default function TweetCard({ navigation, tweet }: Props) {
   const { likeTweet } = useLikeTweet();
   const {
-    user: { _id: currentUserId },
+    currentUser: { currentUserId },
   } = useAuth();
   const { user } = tweet;
 

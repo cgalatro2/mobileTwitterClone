@@ -31,7 +31,7 @@ export default function TweetScreen({ navigation, route }: Props) {
   const {
     _id,
     content,
-    user: { username },
+    user: { username, _id: userId },
     likes,
     comments,
     createdAt,
@@ -50,7 +50,9 @@ export default function TweetScreen({ navigation, route }: Props) {
             <ListItem.Title style={styles.row}>
               <Link
                 text={username}
-                onPress={() => navigation.navigate("User", { username })}
+                onPress={() =>
+                  navigation.navigate("User", { username, userId })
+                }
               />
             </ListItem.Title>
             <Text style={styles.row}>{content}</Text>

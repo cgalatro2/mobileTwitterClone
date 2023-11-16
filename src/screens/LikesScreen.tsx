@@ -18,9 +18,9 @@ export default function LikesScreen({ navigation, route }: Props) {
   const { data: likers } = useLikes(_id);
 
   const {
-    user: { username },
+    currentUser: { currentUsername },
   } = useAuth();
-  const { data: userData } = useUser(username);
+  const { data: userData } = useUser(currentUsername);
   const following = userData?.following ?? [];
 
   const { followUser } = useFollow();
@@ -38,12 +38,12 @@ export default function LikesScreen({ navigation, route }: Props) {
     const onPressFollow = () => {
       if (isFollowing) {
         unfollowUser({
-          unfollowingUsername: username,
+          unfollowingUsername: currentUsername,
           usernameToUnfollow: item.username,
         });
       } else {
         followUser({
-          followingUsername: username,
+          followingUsername: currentUsername,
           usernameToFollow: item.username,
         });
       }
@@ -56,7 +56,7 @@ export default function LikesScreen({ navigation, route }: Props) {
             <ListItem.Title>
               <Text>{item.username}</Text>
             </ListItem.Title>
-            {item.username !== username && (
+            {item.username !== currentUsername && (
               <Button
                 title={isFollowing ? "Unfollow" : "Follow"}
                 onPress={onPressFollow}

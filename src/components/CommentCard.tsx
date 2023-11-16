@@ -16,7 +16,7 @@ type Props = {
 export default function CommentCard({ navigation, comment, tweetId }: Props) {
   const { likeComment } = useLikeComment(tweetId);
   const {
-    user: { _id: currentUserId },
+    currentUser: { currentUserId },
   } = useAuth();
   const { user } = comment;
 
@@ -30,7 +30,10 @@ export default function CommentCard({ navigation, comment, tweetId }: Props) {
           <Link
             text={user.username}
             onPress={() =>
-              navigation.navigate("User", { username: user.username })
+              navigation.navigate("User", {
+                username: user.username,
+                userId: user._id,
+              })
             }
           />
         </ListItem.Title>
