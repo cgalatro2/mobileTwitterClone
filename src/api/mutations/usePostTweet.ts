@@ -8,7 +8,7 @@ type PostTweetRequest = {
   user: string;
 };
 
-const mutationFn = async ({ content, user }) => {
+const mutationFn = async ({ content, user }: PostTweetRequest) => {
   const { status, data } = await serverAPI.post("/tweets", {
     content,
     user,
@@ -23,27 +23,27 @@ export const usePostTweet = () => {
   const queryClient = useQueryClient();
   const { mutate: postTweet } = useMutation<Tweet, any, PostTweetRequest>(
     ["tweets"],
-    mutationFn
-    // {
-    //   onMutate: async (newTweet: Tweet) => {
-    //     // Cancel any outgoing refetches
-    //     // (so they don't overwrite our optimistic update)
-    //     await queryClient.cancelQueries({ queryKey: ["tweets"] });
+    mutationFn,
+    {
+      onSuccess: async (newTweet: Tweet) => {
+        // Cancel any outgoing refetches
+        // (so they don't overwrite our optimistic update)
+        await queryClient.cancelQueries({ queryKey: ["tweets"] });
 
-    //     // Snapshot the previous value
-    //     const previousTweets = queryClient.getQueryData<Tweet[]>(["tweets"]);
+        // Snapshot the previous value
+        const previousTweets = queryClient.getQueryData<Tweet[]>(["tweets"]);
 
-    //     // Optimistically update to the new value
-    //     queryClient.setQueryData<Tweet[]>(["tweets"], (old) => [
-    //       ...old,
-    //       newTweet,
-    //     ]);
+        // Optimistically update to the new value
+        queryClient.setQueryData<Tweet[]>(["tweets"], (old) => [
+          ...old,
+          newTweet,
+        ]);
 
-    //     // Return a context object with the snapshotted value
-    //     return { previousTweets };
-    //   },
-    //   onError: (error) => console.log(`Error when posting tweet: ${error}`),
-    // }
+        // Return a context object with the snapshotted value
+        return { previousTweets };
+      },
+      onError: (error) => console.log(`Error when posting tweet: ${error}`),
+    }
   );
 
   return { postTweet };

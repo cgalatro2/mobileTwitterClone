@@ -20,31 +20,49 @@ const mutationFn = async ({ content, user, tweetId }) => {
   return data;
 };
 
-export const usePostComment = () => {
+export const usePostComment = (tweetId?: string) => {
   const queryClient = useQueryClient();
   const { mutate: postComment } = useMutation<Tweet, any, PostCommentRequest>(
     ["tweets", "comment"],
-    mutationFn
-    // {
-    //   onMutate: async (newTweet: Tweet) => {
-    //     // Cancel any outgoing refetches
-    //     // (so they don't overwrite our optimistic update)
-    //     await queryClient.cancelQueries({ queryKey: ["tweets"] });
+    mutationFn,
+    {
+      onSuccess: async (newTweet: Tweet) => {
+        if (tweetId) {
+          // if we're commenting on the TweetScreen, we need to update just that tweet
+          const queryKey = ["tweet", `${tweetId}`];
+          // Cancel any outgoing refetches
+          // (so they don't overwrite our optimistic update)
+          await queryClient.cancelQueries({ queryKey });
 
-    //     // Snapshot the previous value
-    //     const previousTweets = queryClient.getQueryData<Tweet[]>(["tweets"]);
+          // Snapshot the previous value
+          const previousTweets = queryClient.getQueryData<Tweet>(queryKey);
 
-    //     // Optimistically update to the new value
-    //     queryClient.setQueryData<Tweet[]>(["tweets"], (old) => [
-    //       ...old,
-    //       newTweet,
-    //     ]);
+          // Optimistically update to the new value
+          queryClient.setQueryData<Tweet>(queryKey, (_old) => newTweet);
 
-    //     // Return a context object with the snapshotted value
-    //     return { previousTweets };
-    //   },
-    //   onError: (error) => console.log(`Error when posting tweet: ${error}`),
-    // }
+          // Return a context object with the snapshotted value
+          return { previousTweets };
+        } else {
+          const queryKey = ["tweets"];
+          // Cancel any outgoing refetches
+          // (so they don't overwrite our optimistic update)
+          await queryClient.cancelQueries({ queryKey });
+
+          // Snapshot the previous value
+          const previousTweets = queryClient.getQueryData<Tweet[]>(queryKey);
+
+          // Optimistically update to the new value
+          queryClient.setQueryData<Tweet[]>(queryKey, (old) => [
+            ...old,
+            newTweet,
+          ]);
+
+          // Return a context object with the snapshotted value
+          return { previousTweets };
+        }
+      },
+      onError: (error) => console.log(`Error when posting tweet: ${error}`),
+    }
   );
 
   return { postComment };

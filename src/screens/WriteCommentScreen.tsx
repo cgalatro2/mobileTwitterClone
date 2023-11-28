@@ -23,7 +23,7 @@ export default function WriteComment({ navigation, route }: Props) {
 
   const [content, setContent] = useState("");
 
-  const { postComment } = usePostComment();
+  const { postComment } = usePostComment(tweetId);
 
   const {
     currentUser: { currentUserId },

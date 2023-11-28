@@ -22,14 +22,15 @@ const mutationFn = async ({ _id, user, isLiked = true }) => {
   return data;
 };
 
-export const useLikeTweet = () => {
+export const useLikeTweet = (tweetId?: string) => {
   const queryClient = useQueryClient();
   const { mutate: likeTweet } = useMutation<Tweet, any, LikeTweetRequest>(
     ["tweets", "like"],
     mutationFn,
     {
       onSuccess: () => {
-        queryClient.refetchQueries(["tweets"]);
+        const queryKey = tweetId ? ["tweet", `${tweetId}`] : ["tweets"];
+        queryClient.refetchQueries(queryKey);
       },
       onError: (error) => {
         console.log(error.message);
