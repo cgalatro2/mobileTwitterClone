@@ -19,13 +19,13 @@ export default function TweetCard({ navigation, tweet }: Props) {
   } = useAuth();
   const { user } = tweet;
 
-  const isLiked = tweet.likes.includes(currentUserId);
-  const likeCount = tweet.likes.length;
-  const commentCount = tweet.comments.length;
+  const isLiked = tweet?.likes?.includes(currentUserId);
+  const likeCount = tweet?.likes?.length;
+  const commentCount = tweet?.comments?.length;
 
   return (
     <Pressable
-      onPress={() => navigation.navigate("Tweet", { tweetId: tweet._id })}
+      onPress={() => navigation.navigate("Tweet", { tweetId: tweet?._id })}
     >
       <ListItem bottomDivider>
         <ListItem.Content>
@@ -40,19 +40,19 @@ export default function TweetCard({ navigation, tweet }: Props) {
               }
             />
           </ListItem.Title>
-          <Text style={styles.content}>{tweet.content}</Text>
+          <Text style={styles.content}>{tweet?.content}</Text>
           <View style={styles.reactions}>
             <Icon
               name={`favorite${isLiked ? "" : "-outline"}`}
               color={"pink"}
               onPress={() =>
-                likeTweet({ _id: tweet._id, user: currentUserId, isLiked })
+                likeTweet({ _id: tweet?._id, user: currentUserId, isLiked })
               }
             />
             <Text style={styles.count}>{likeCount}</Text>
             <Icon
               name={"comment"}
-              onPress={() => navigation.navigate("Comment", { tweet })}
+              onPress={() => navigation.navigate("WriteComment", { tweet })}
             />
             <Text style={styles.count}>{commentCount}</Text>
           </View>

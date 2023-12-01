@@ -30,7 +30,9 @@ export default () => {
               );
             },
             tabBarShowLabel: false,
+            tabBarStyle: { position: "relative" },
           })}
+          initialRouteName="Home"
         >
           <Tab.Screen
             name="Home"

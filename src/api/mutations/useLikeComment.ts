@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 
-import serverAPI from "api/serverAPI";
+import { instance } from "api/serverAPI";
 import { Comment } from "api/types/Comment";
 
 type LikeCommentRequest = {
@@ -10,7 +10,7 @@ type LikeCommentRequest = {
 };
 
 const mutationFn = async ({ _id, user, isLiked }) => {
-  const { status, data } = await serverAPI.post(
+  const { status, data } = await instance.post(
     `/comments/${_id}/${isLiked ? "unlike" : "like"}`,
     {
       user,

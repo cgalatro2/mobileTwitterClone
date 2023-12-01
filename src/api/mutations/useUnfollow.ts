@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 
-import serverAPI from "api/serverAPI";
+import { instance } from "api/serverAPI";
 
 type FollowRequest = {
   unfollowingUsername: string;
@@ -11,7 +11,7 @@ const mutationFn = async ({
   unfollowingUsername,
   usernameToUnfollow,
 }: FollowRequest) => {
-  const { status, data } = await serverAPI.post(
+  const { status, data } = await instance.post(
     `/unfollow/${usernameToUnfollow}`,
     {
       unfollowingUsername,
@@ -28,7 +28,7 @@ export const useUnfollow = () => {
   // TODO type useMutation
   const { mutate: unfollowUser } = useMutation(["follow"], mutationFn, {
     onSuccess: () => {
-      queryClient.refetchQueries(["user"]);
+      queryClient.refetchQueries({ queryKey: ["user"] });
     },
   });
 

@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 
-import serverAPI from "api/serverAPI";
+import { instance } from "api/serverAPI";
 
 type FollowRequest = {
   followingUsername: string;
@@ -11,7 +11,7 @@ const mutationFn = async ({
   followingUsername,
   usernameToFollow,
 }: FollowRequest) => {
-  const { status, data } = await serverAPI.post(`/follow/${usernameToFollow}`, {
+  const { status, data } = await instance.post(`/follow/${usernameToFollow}`, {
     followingUsername,
   });
   if (status !== 200) {

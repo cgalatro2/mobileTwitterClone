@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 
-import serverAPI from "api/serverAPI";
+import { instance } from "api/serverAPI";
 import { Tweet } from "api/types/Tweet";
 
 type PostCommentRequest = {
@@ -10,7 +10,7 @@ type PostCommentRequest = {
 };
 
 const mutationFn = async ({ content, user, tweetId }) => {
-  const { status, data } = await serverAPI.post(`/tweets/${tweetId}/comment`, {
+  const { status, data } = await instance.post(`/tweets/${tweetId}/comment`, {
     content: content,
     user,
   });
@@ -26,41 +26,12 @@ export const usePostComment = (tweetId?: string) => {
     ["tweets", "comment"],
     mutationFn,
     {
-      onSuccess: async (newTweet: Tweet) => {
-        if (tweetId) {
-          // if we're commenting on the TweetScreen, we need to update just that tweet
-          const queryKey = ["tweet", `${tweetId}`];
-          // Cancel any outgoing refetches
-          // (so they don't overwrite our optimistic update)
-          await queryClient.cancelQueries({ queryKey });
-
-          // Snapshot the previous value
-          const previousTweets = queryClient.getQueryData<Tweet>(queryKey);
-
-          // Optimistically update to the new value
-          queryClient.setQueryData<Tweet>(queryKey, (_old) => newTweet);
-
-          // Return a context object with the snapshotted value
-          return { previousTweets };
-        } else {
-          const queryKey = ["tweets"];
-          // Cancel any outgoing refetches
-          // (so they don't overwrite our optimistic update)
-          await queryClient.cancelQueries({ queryKey });
-
-          // Snapshot the previous value
-          const previousTweets = queryClient.getQueryData<Tweet[]>(queryKey);
-
-          // Optimistically update to the new value
-          queryClient.setQueryData<Tweet[]>(queryKey, (old) => [
-            ...old,
-            newTweet,
-          ]);
-
-          // Return a context object with the snapshotted value
-          return { previousTweets };
-        }
-      },
+      onSuccess: () =>
+        tweetId
+          ? queryClient.refetchQueries<Tweet>({
+              queryKey: ["tweet", `${tweetId}`],
+            })
+          : queryClient.refetchQueries<Tweet>({ queryKey: ["tweets"] }),
       onError: (error) => console.log(`Error when posting tweet: ${error}`),
     }
   );

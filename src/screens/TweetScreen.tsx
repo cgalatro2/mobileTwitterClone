@@ -91,7 +91,7 @@ export default function TweetScreen({ navigation, route }: Props) {
             />
             <Icon
               name={"comment"}
-              onPress={() => navigation.navigate("Comment", { tweet })}
+              onPress={() => navigation.navigate("WriteComment", { tweet })}
             />
           </ListItem.Content>
         </ListItem>

@@ -14,7 +14,7 @@ export default function HomeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Feed" component={FeedScreen} />
-      <Stack.Screen name="Comment" component={WriteCommentScreen} />
+      <Stack.Screen name="WriteComment" component={WriteCommentScreen} />
       <Stack.Screen name="User" component={UserScreen} />
       <Stack.Screen name="Tweet" component={TweetScreen} />
       <Stack.Screen name="Likes" component={LikesScreen} />
