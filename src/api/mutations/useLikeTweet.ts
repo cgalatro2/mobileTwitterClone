@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 
-import serverAPI from "api/serverAPI";
+import { instance } from "api/serverAPI";
 import { Tweet } from "api/types/Tweet";
 
 type LikeTweetRequest = {
@@ -10,7 +10,7 @@ type LikeTweetRequest = {
 };
 
 const mutationFn = async ({ _id, user, isLiked = true }) => {
-  const { status, data } = await serverAPI.post(
+  const { status, data } = await instance.post(
     `/tweets/${_id}/${isLiked ? "unlike" : "like"}`,
     {
       user,
@@ -30,7 +30,7 @@ export const useLikeTweet = (tweetId?: string) => {
     {
       onSuccess: () => {
         const queryKey = tweetId ? ["tweet", `${tweetId}`] : ["tweets"];
-        queryClient.refetchQueries(queryKey);
+        queryClient.refetchQueries({ queryKey });
       },
       onError: (error) => {
         console.log(error.message);

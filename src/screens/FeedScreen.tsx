@@ -4,7 +4,6 @@ import { BottomSheet } from "@rneui/themed";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTweets } from "api/queries/useTweets";
-import { Tweet } from "api/types/Tweet";
 
 import WriteTweet from "components/WriteTweet";
 import TweetCard from "components/TweetCard";

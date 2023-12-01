@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import * as SecureStore from "expo-secure-store";
 
-import serverAPI from "api/serverAPI";
+import { instance, setAuthToken } from "api/serverAPI";
 
 // TODO: type these https://kentcdodds.com/blog/how-to-use-react-context-effectively
 const AuthContext = createContext(null);
@@ -34,7 +34,7 @@ export async function login(
   signup = false
 ) {
   try {
-    const response = await serverAPI.post(`/${signup ? "signup" : "login"}`, {
+    const response = await instance.post(`/${signup ? "signup" : "login"}`, {
       username,
       email,
       password,
@@ -74,9 +74,10 @@ export async function logout(dispatch) {
 export async function tryLocalLogin(dispatch) {
   try {
     const token = await SecureStore.getItemAsync("token");
+    setAuthToken(token);
     const userId = await SecureStore.getItemAsync("currentUserId");
     if (token && userId) {
-      const response = await serverAPI.get(`/users/${userId}`);
+      const response = await instance.get(`/users/${userId}`);
       if (response.data) {
         const { user } = response.data;
         dispatch({ type: "LOGIN", payload: { token, user } });
@@ -116,6 +117,7 @@ function authReducer(state: AuthState, action: any) {
         token,
         user: { username, email, _id },
       } = action.payload;
+      setAuthToken(token);
       return {
         errorMessage: "",
         token,
